@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user %}
+    <h2> Hello, {{ user.username }} </h2>
+    <a href="{% url 'account' %}"><button type="button" class="btn btn-primary">Przejdź do konta!</button></a>
+  {% else %}
+    <h3> Hi not logged user! </h3>
+    <a href="{% url 'login' %}"><button type="button" class="btn btn-primary">Zaloguj sie!</button></a>
+    <a href="{% url 'signup' %}"><button type="button" class="btn btn-primary">Zarejstruj się!</button></a>
+  {% endif %}
+{% endblock %}

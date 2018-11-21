@@ -1,5 +1,5 @@
 from django import forms
-from .models import BankUser
+from .models import BankUser, Transfer
 
 class BankUserRegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -18,3 +18,13 @@ class BankUserRegisterForm(forms.ModelForm):
             raise forms.ValidationError(
                 "password and confirm_password does not match"
             )
+
+
+class BankUserLoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
+class TransferForm(forms.Form):
+    receiver = forms.CharField()
+    amount = forms.FloatField()

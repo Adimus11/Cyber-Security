@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2> Hello, {{ user.username }} </h2>
+  <h3>Witaj na stronie banku ZSP</h3>
+  <h3>Twój stan konta to: {{ user.balance }}</h3>
+  <a href="{% url 'logout' %}">Wyloguj się!</a>
+{% endblock %}
