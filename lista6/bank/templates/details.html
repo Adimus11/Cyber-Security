@@ -1,8 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2> Hello, {{ user.username }} </h2>
-  <h3>Witaj na stronie banku ZSP</h3>
-  <h3>Twój stan konta to: {{ user.balance }}</h3>
-  <a href="{% url 'logout' %}">Wyloguj się!</a>
+<h2> Witaj, {{ user.username }} na stronie bankowości online ZSP! </h2>
+<h3>Akcje:</h3>
+<a href="{% url 'transfer' %}"><button type="button" class="btn btn-primary">Wyślij przelew!</button></a>
+<a href="{% url 'logout' %}"><button type="button" class="btn btn-primary">Wyloguj się!</button></a>
+  <h3>Stan konta: {{ user.balance }}</h3>
+  <h3>Dostępne środki: {{ user.available_founds }}</h3>
+  <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Nadawca</th>
+            <th scope="col">Odbiorca</th>
+            <th scope="col">Pieniądze</th>
+            <th scope="col">Data</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 {% endblock %}

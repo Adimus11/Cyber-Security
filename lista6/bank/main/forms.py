@@ -1,7 +1,8 @@
 from django import forms
-from .models import BankUser, Transfer
+from .models import BankUser
 
 class BankUserRegisterForm(forms.ModelForm):
+    username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
@@ -16,7 +17,7 @@ class BankUserRegisterForm(forms.ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError(
-                "password and confirm_password does not match"
+                "Haslo się nie zgadza"
             )
 
 
@@ -28,3 +29,12 @@ class BankUserLoginForm(forms.Form):
 class TransferForm(forms.Form):
     receiver = forms.CharField()
     amount = forms.FloatField()
+
+    def clean(self):
+        cleaned_data = super(TransferForm, self).clean()
+        receiver = cleaned_data.get("receiver")
+
+        if not BankUser.objects.filter(username=receiver).exists():
+            raise forms.ValidationError(
+                "Taki uzytkownik nie istniej"
+            )

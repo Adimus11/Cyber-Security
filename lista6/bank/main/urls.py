@@ -5,6 +5,8 @@ from main.views import (
     account,
     signin,
     signout,
+    transfer,
+    transfer_detail,
 )
 
 urlpatterns = [
@@ -12,5 +14,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('account/', account, name='account'),
     path('signin/', signin, name='login'),
-    path('signout', signout, name='logout')
+    path('signout/', signout, name='logout'),
+    path('transfer/', transfer, name='transfer'),
+    path('transfer_detail/<int:transfer_id>/', transfer_detail, name='show_transfer'),
 ]
