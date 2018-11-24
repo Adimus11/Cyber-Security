@@ -22,9 +22,10 @@ class Transfer(models.Model):
     date = models.DateTimeField(default=None, null=True)
 
     def accept(self):
-        if self.amount <= self.sender.balance:
+        if self.amount <= self.sender.available_founds:
             self.sender.balance -= self.amount
             self.receiver.balance += self.amount
+            self.receiver.available_founds += self.amount
             self.is_staged = False
             self.sender.save()
             self.receiver.save()

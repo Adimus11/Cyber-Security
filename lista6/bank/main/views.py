@@ -1,14 +1,16 @@
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from .forms import BankUserRegisterForm, BankUserLoginForm, TransferForm
 from .models import BankUser, Transfer
+from .utils import generate_suitable_transfers
 
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect(reverse('account'))
+        return redirect(request, reverse('account'))
 
     if request.method == 'POST':
         form = BankUserRegisterForm(request.POST)
@@ -19,6 +21,7 @@ def signup(request):
             BankUser.objects.create_user(
                 username, email=mail, password=password
             )
+            messages.info(request, 'Konto utworzone, można się zarejstrować.')
             return redirect(reverse('login'))
     else:
         form = BankUserRegisterForm()
@@ -40,9 +43,11 @@ def signin(request):
             )
             if user is not None:
                 login(request, user)
+                messages.success(request, 'Zalogowano')
                 return redirect(reverse('account'))
             else:
-                return redirect(reverse('index'))
+                messages.error(request, 'Nieprawidłowe dane logowania :/')
+                return redirect(reverse('login'))
     else:
         form = BankUserLoginForm()
     return render(request, 'sign.html',
@@ -52,12 +57,19 @@ def signin(request):
 
 def transfer(request):
     if not request.user.is_authenticated:
+        messages.error(request, 'Wymagane zalogowanie się!')
         return redirect(reverse('index'))
+
     elif request.method == 'POST':
         form = TransferForm(request.POST)
         if form.is_valid():
             receiver_username = form.cleaned_data['receiver']
             amount = abs(form.cleaned_data['amount'])
+
+            if amount > request.user.available_founds:
+                messages.error(request, 'Za mało środków :c')
+                return redirect(reverse('account'))
+
             receiver = BankUser.objects.get(username=receiver_username)
 
             transfer = Transfer(
@@ -84,33 +96,61 @@ def transfer(request):
 def transfer_detail(request, transfer_id):
     transfer = get_object_or_404(Transfer, pk=transfer_id)
     if not request.user.is_authenticated  and request.user.is_sender():
-        return redirect(reverse('index'))
+        return redirect(reverse('account'))
 
     if request.method == 'POST':
-        print(request.POST)
         if request.POST.get('accepted', None):
             transfer.accept()
+            return redirect(
+                reverse(
+                    'look_transfer',
+                    kwargs={'transfer_id': transfer.pk}
+                )
+            )
         else:
             transfer.delete()
-        redirect(request, reverse('account'))
+            return redirect(reverse('account'))
     else:
         return render(
             request,
             'transfer_detail.html',
-            {'transfer': transfer}
+            {'transfer': transfer, 'accept': True}
         )
-    
+
+
+def transfer_overview(request, transfer_id):
+    transfer = get_object_or_404(Transfer, pk=transfer_id)
+    if not request.user.is_authenticated  and request.user.is_sender():
+        return redirect(reverse('account'))
+
+    return render(
+        request,
+        'transfer_detail.html',
+        {'transfer': transfer, 'accept': False}
+    )
+
 
 def signout(request):
     if request.user.is_authenticated:
+        messages.success(request, 'Wylogowano!')
         logout(request)
-    return redirect(reverse('account'))
+    return redirect(reverse('index'))
 
 
 def account(request):
     if request.user.is_authenticated:
-        return render(request, 'details.html', {'user': request.user})
+        transfers, staged = generate_suitable_transfers(request.user)
+        return render(
+            request,
+            'details.html',
+            {
+                'user': request.user,
+                'transfers': transfers,
+                'staged': staged,
+            }
+        )
     else:
+        messages.ERROR(request, 'Wymagane zalogowanie się!')
         return redirect(reverse('index'))
 
 

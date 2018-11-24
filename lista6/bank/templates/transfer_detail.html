@@ -14,6 +14,7 @@
                 <th>{{ transfer.sender.username }}</th>
                 <th>{{ transfer.receiver.username }}</th>
                 <th>{{ transfer.amount }}</th>
+    {% if accept %}
             </tr>
         </tbody>
     </table>
@@ -22,4 +23,10 @@
         <button type="submit" class="btn btn-success" name="accepted" value="ok">Akceptuj</button>
         <button type="submit" class="btn btn-danger" name="not_accepted" value="not">Anuluj</button>
     </form>
+    {% else %}
+            </tr>
+        </tbody>
+    </table>
+    <a href="{% url 'account' %}"><button type="button" class="btn btn-primary">Powrót do konta!</button></a>
+    {% endif %}
 {% endblock %}
