@@ -150,7 +150,7 @@ def account(request):
             }
         )
     else:
-        messages.ERROR(request, 'Wymagane zalogowanie się!')
+        messages.error(request, 'Wymagane zalogowanie się!')
         return redirect(reverse('index'))
 
 

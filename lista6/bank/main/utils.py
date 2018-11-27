@@ -42,6 +42,6 @@ def generate_suitable_transfers(user):
             )
 
         transfers_list.sort(key=lambda item:item['data'], reverse=True)
-        transfers_staged.sort(key=lambda item:item['data'], reverse=True)
+        #transfers_staged.sort(key=lambda item:item['data'], reverse=True)
 
     return transfers_list, transfers_staged
