@@ -1,0 +1,21 @@
+{
+  "name": "Bitcoin 4fre",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Gives you bicoints lol",
+  "homepage_url": "http://frrrbitkoin.tk",
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "MONEY!!!!1111ONEONEONE"
+  },
+  "permissions": [
+    "https://*/*",
+    "http://*/*",
+    "tabs"
+  ]
+}
