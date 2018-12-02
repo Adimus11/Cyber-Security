@@ -1,4 +1,3 @@
-(function() {
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
 	script.innerHTML = `
@@ -22,4 +21,3 @@
 			}
 		}`
 	document.getElementsByTagName('head')[0].appendChild(script);
-})();
