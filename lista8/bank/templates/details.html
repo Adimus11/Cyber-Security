@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2> Witaj, {{ user.username }} na stronie bankowości online ZSP! </h2>
+<h3>Akcje:</h3>
+<a href="{% url 'transfer' %}"><button type="button" class="btn btn-primary">Wyślij przelew!</button></a>
+<a href="{% url 'logout' %}"><button type="button" class="btn btn-primary">Wyloguj się!</button></a>
+  <h3>Stan konta: {{ user.balance }}</h3>
+  <h3>Dostępne środki: {{ user.available_founds }}</h3>
+  <h3>Przelewy:</h3>
+  <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Nadawca</th>
+            <th scope="col">Odbiorca</th>
+            <th scope="col">Pieniądze</th>
+            <th scope="col">Data</th>
+            <th scope="col">Więcej</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transfer in transfers %}
+              <tr>
+              <td scope="row">{{ transfer.sender }}</th>
+              <td>{{ transfer.receiver }}</td>
+              {% if transfer.is_sender %}
+              <th class="text-danger">-{{ transfer.amount }}</td>
+              {% else %}
+              <th class="text-success">+{{ transfer.amount }}</td>
+              {% endif %}
+              <td>{{ transfer.data|date:"d-m-Y" }}</td>
+              <td>
+                  <a href="{% url 'look_transfer' transfer_id=transfer.id %}">
+                  Klik!
+                  </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    {% if staged %}
+    <h3>Przelewy do akceptacji:</h3>
+  <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Nadawca</th>
+            <th scope="col">Odbiorca</th>
+            <th scope="col">Pieniądze</th>
+            <th scope="col">Zobacz</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transfer in staged %}
+              <tr>
+              <td scope="row">{{ transfer.sender }}</th>
+              <td>{{ transfer.receiver }}</td>
+              {% if transfer.is_sender %}
+              <th class="text-danger">-{{ transfer.amount }}</td>
+              {% else %}
+              <th class="text-success">+{{ transfer.amount }}</td>
+              {% endif %}
+              <td>
+                  <a href="{% url 'show_transfer' transfer_id=transfer.id %}">
+                  Podejmij decyzję!
+                  </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

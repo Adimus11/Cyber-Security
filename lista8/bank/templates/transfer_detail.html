@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Nadawca</th>
+            <th scope="col">Odbiorca</th>
+            <th scope="col">Pieniądze</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>{{ transfer.sender.username }}</th>
+                <th>{{ transfer.receiver.username }}</th>
+                <th>{{ transfer.amount }}</th>
+    {% if accept %}
+            </tr>
+        </tbody>
+    </table>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success" name="accepted" value="ok">Akceptuj</button>
+        <button type="submit" class="btn btn-danger" name="not_accepted" value="not">Anuluj</button>
+    </form>
+    {% else %}
+            </tr>
+        </tbody>
+    </table>
+    <a href="{% url 'account' %}"><button type="button" class="btn btn-primary">Powrót do konta!</button></a>
+    {% endif %}
+{% endblock %}
