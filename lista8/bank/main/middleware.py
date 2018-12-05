@@ -87,4 +87,4 @@ class SSLClientAuthMiddleware(MiddlewareMixin):
                 return
             logger.info("Logging user in")
             login(request, user)
-            return HttpResponseRedirect(resolve_url(settings.LOGIN_REDIRECT_URL))
+            return
